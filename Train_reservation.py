@@ -114,10 +114,13 @@ class Train_reservation:
                     for i in range (len(self.trainUserData_checkYes)):
                         print(i, '. ', self.trainUserData_checkYes[i])
                     checkPop = int(input("몇 번을 삭제하시겠습니까? : "))
-                    self.trainUserData_checkYes[checkPop][4] = self.trainUserData_checkYes[checkPop][4] + 1
-                    self.trainUserData_checkYes.pop(checkPop)
-                    print("예약이 취소되었습니다. \n")
-
+                    if self.trainUserData_checkYes[checkPop][4] == '매진' :
+                        self.trainUserData_checkYes[checkPop][4] = 1
+                        print("예매가 취소되었습니다. \n")    
+                    else:
+                        self.trainUserData_checkYes[checkPop][4] = self.trainData.trainTable[self.userFindDataIndex][4] + 1
+                        self.trainUserData_checkYes.pop(checkPop)
+                        print("예매가 취소되었습니다. \n")                       
                     self.menu()
 
                 elif checkCancel == 3:
