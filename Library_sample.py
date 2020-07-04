@@ -1,33 +1,29 @@
 import os
 import sys
-#Library_management + Library_system
 
-class BookList:
-    def __init__(self):
-        self.Booklist = []
+# try:
+THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+my_file = os.path.join(THIS_FOLDER, 'input.txt')
+Bookdata = open(my_file, 'r')
+Book_line = Bookdata.readlines()
+Check_Books = list()
 
-    def Booklist_Get(self):
-        try:
-            THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))#절대경로
-            my_file = os.path.join(THIS_FOLDER, 'input.txt')
-            self.Bookdata = open(my_file, 'r')#기존의 파일은 유지하고 새로운 내용을 입력받는 'a'를 사용
-            while True:
-                Book_line = self.Bookdata.readline()#input.txt에서 가져온 내용을 한줄씩 리스트화
-                if not Book_line:
-                    break
-                Book_list = Book_line.split()
-                self.Booklist.append(Book_list)
-            self.Bookdata.close()
-            return self.Booklist
-        except:
-            pass
+for i in range(len(Book_line)):
+    Check_Book = Book_line[i].split()
 
-class WelcomLibrary(BookList):
-    def __init__(self):
+    Check_Books += Check_Book
+
+Bookdata.close()
+# except:
+#     pass
+
+class WelcomLibrary:
+    def __init__(self,Book_line):
         self.Book_User = None #사용자가 직접 입력한 내용
         self.Book = None
         self.AddBook_Content = list()
-        self.Plus_Book = list()
+        self.Plus_Book = []
+        self.Plus_Book.append(Check_Books)
         self.menu()
 
     def menu(self):
@@ -55,6 +51,9 @@ class WelcomLibrary(BookList):
             self.StoreBook()
         elif num == 7:
             sys.exit()
+
+        # elif num == 8:
+
         else :
             print("1~7의 숫자만 입력해주십시오")
             self.menu()
@@ -67,7 +66,7 @@ class WelcomLibrary(BookList):
         self.AddBook_year = input("출판연도 : ")
         self.AddBook_company = input("출판사명 : ")
         self.AddBook_genre = input("장르 : ") 
-        self.AddBook_Content = (self.AddBook_name).split() + self.AddBook_writer.split() + self.AddBook_year.split() + self.AddBook_company.split() + self.AddBook_genre.split()
+        self.AddBook_Content = self.AddBook_name.split() + self.AddBook_writer.split() + self.AddBook_year.split() + self.AddBook_company.split() + self.AddBook_genre.split()
 
         self.Plus_Book.append(self.AddBook_Content)
 
@@ -166,7 +165,7 @@ class WelcomLibrary(BookList):
         for i in range(len(self.Plus_Book)):
             print(i, '. ', self.Plus_Book[i])
         
-        RetouchBook_input = int(input("수정할 도서의 번호를 입력해주세요 :" ))
+        RetouchBook_input = int(input("\n수정할 도서의 번호를 입력해주세요 : " ))
 
         print("""
         수정할 파트 선택
@@ -235,27 +234,28 @@ class WelcomLibrary(BookList):
             self.menu()
 
     def ListBook(self):#현재 총 도서 목록 출력
-        if self.Plus_Book == [] :
+        if self.Plus_Book == []:
             print("현재 저장되어 있는 도서가 없습니다. ")
             self.menu()
         else :
             for i in range(len(self.Plus_Book)):
                 print(self.Plus_Book[i])
 
-            print("도서를 출력했습니다. 메뉴로 돌아갑니다.")
+            print("\n도서를 출력했습니다. 메뉴로 돌아갑니다.")
             self.menu()
 
     def StoreBook(self):#현재 내용 저장
         THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
         my_file = os.path.join(THIS_FOLDER, 'input.txt')
-        StoreBook_final = open(my_file, 'w')
+        self.StoreBook_final = open(my_file, 'r+')
         Userinput = str(input("작업 내용을 저장하시겠습니까? (y/n) : "))
         if Userinput == 'y':
             for i in range(len(self.Plus_Book)):
-                StoreBook_final.writelines(" ".join(self.Plus_Book[i]))
-                StoreBook_final.write("\n")
+                self.StoreBook_final.writelines(" ".join(self.Plus_Book[i]))
+                self.StoreBook_final.write("")
                 print("저장되었습니다.")
-                return self.menu()
+                
+            self.menu()
         elif Userinput == 'n':
             print("메뉴로 돌아갑니다.")
             return self.menu()
@@ -280,6 +280,6 @@ class WelcomLibrary(BookList):
         #     else :
         #         return self.StorBook_return() #재귀함수!
 
-        StoreBook_final.close()
+        self.StoreBook_final.close()
 
-Library_Program = WelcomLibrary()
+Library_Program = WelcomLibrary(Book_line)
