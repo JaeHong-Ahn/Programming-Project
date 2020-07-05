@@ -1,19 +1,28 @@
 import os
 import sys
 
+# 현재  Check_Books를 출력하면, 도서내용이 하나의 리스트로 split 되어 나타남
+# 이를 5개씩 묶어서 self.Plus_Book에 추가 ( feat. self.menu == 8)
+
+# self.Plus_Book에 append를 하게 되면, self.Plus_Book[0]에 저장되어있던 도서의 내용이 모두 들어가있음(2중배열)
+# 위 2중배열을 한단계 벗겨내는 것이 관건인데, slicing이나 numply로는 구동해내지 못했음
+
 # try:
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 my_file = os.path.join(THIS_FOLDER, 'input.txt')
 Bookdata = open(my_file, 'r')
 Book_line = Bookdata.readlines()
 Check_Books = list()
-
+# print(Book_line)
 for i in range(len(Book_line)):
-    Check_Book = Book_line[i].split()
+    Check_Books.append(Book_line[i].split())
+    print(Book_line[i].split())#for문을 통해 출력한 내용이 형태변화 없이 self.Plus_Book에 담겨야함#
 
-    Check_Books += Check_Book
+print(Check_Books)#저장되어있던 도서의 내용이 2중배열로 출력이 됨#
 
 Bookdata.close()
+
+
 # except:
 #     pass
 
@@ -23,7 +32,8 @@ class WelcomLibrary:
         self.Book = None
         self.AddBook_Content = list()
         self.Plus_Book = []
-        self.Plus_Book.append(Check_Books)
+        self.Plus_Book.extend(Check_Books)
+        
         self.menu()
 
     def menu(self):
@@ -52,8 +62,9 @@ class WelcomLibrary:
         elif num == 7:
             sys.exit()
 
-        # elif num == 8:
-
+        elif num == 8:
+            print(Check_Books)
+           
         else :
             print("1~7의 숫자만 입력해주십시오")
             self.menu()
